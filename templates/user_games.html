@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Ваши игры</title>
+</head>
+<body>
+<table>
+    <thead><th>Id</th><th>Имя игрока</th><th>Количество цифр</th><th>Количество ходов</th><th>Загаданное число</th><th>Количество секунд</th></thead>
+    {{range . }}
+        <tr>
+            <td>{{.Id}}</td>
+            <td>{{.UserName}}</td>
+            <td>{{.CountOfDigits}}</td>
+            <td>{{.CountOfTurns}}</td>
+            <td>{{.ThoughtNumber}}</td>
+            <td>{{.CountOfSeconds}}</td>
+        </tr>
+    {{end}}
+</table>
+</body>
+</html>

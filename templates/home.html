@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Стартовая страница</title>
+</head>
+<body>
+
+<p><b>Ваше имя:</b><br>
+    <input type="text" id="tb_name" size="20">
+</p>
+
+<p><b>Ваш пароль:</b><br>
+    <input type="text" id="tb_password" size="40">
+</p>
+<p><b>Сложность:</b><br>
+    <input type="number" min="1" max="10" id="count_digits" />
+</p>
+
+    <input type="button" id="btn_auth" value="Авторизоваться" />
+    <input type="button" id="btn_register" value="Зарегистрироваться" />
+
+    <input type="button" id="btn_start_new_game" value="Начать новую игру" />
+    <input type="button" id="btn_load_game" value="Загрузить вашу последнюю игру" />
+    <input type="button" id="btn_finished_games" value="Посмотреть ваши последние игры" />
+    <input type="button" id="btn_check_records" value="Посмотреть рекорды игр" />
+
+
+<script>
+    var btn_start_new_game = document.getElementById('btn_start_new_game');
+    var btn_load_game = document.getElementById('btn_load_game');
+    var btn_finished_games = document.getElementById('btn_finished_games');
+    var btn_check_records = document.getElementById('btn_check_records');
+    var btn_register = document.getElementById('btn_register');
+    var tb_name = document.getElementById('tb_name');
+    var tb_password = document.getElementById('tb_password');
+    var btn_auth = document.getElementById('btn_auth');
+    var count_digits = document.getElementById('count_digits');
+
+    var token;
+    btn_register.onclick = function () {
+
+        const request = new XMLHttpRequest();
+        request.open('GET', 'http://localhost:8080/register');
+        request.setRequestHeader('name', tb_name.value)
+        request.setRequestHeader('password', tb_password.value)
+        request.send();
+        request.addEventListener("readystatechange", () => {
+            if (request.readyState === 3 || request.readyState===4) {
+               alert(request.responseText)
+            }
+        });
+    }
+    btn_auth.onclick = function () {
+
+        const request = new XMLHttpRequest();
+        request.open('GET', 'http://localhost:8080/auth');
+        request.setRequestHeader('name', tb_name.value)
+        request.setRequestHeader('password', tb_password.value)
+        request.send();
+
+        request.addEventListener("readystatechange", () => {
+
+            if (request.readyState === 3 || request.readyState === 4) {
+                if (request.response.code === 200) {
+                    token = request.responseText;
+                }
+                alert(request.responseText)
+
+
+            }
+        })
+    }
+
+    btn_finished_games.onclick = function () {
+        window.open("http://localhost:8080/user/finished_games", "_blank");
+    }
+
+    btn_start_new_game.onclick = function () {
+        document.cookie = "countOfDigits=" +count_digits.value ;
+        document.cookie = "typeGame=0";
+        window.open("http://localhost:8080/user/game", "_blank");
+    }
+    btn_check_records.onclick = function () {
+        document.cookie = "countOfDigits=" +count_digits.value ;
+        window.open("http://localhost:8080/user/scoreboard", "_blank");
+    }
+    btn_load_game.onclick = function () {
+        document.cookie = "typeGame=1";
+        window.open("http://localhost:8080/user/game", "_blank");
+    }
+
+</script>
+
+</body>
+</html>

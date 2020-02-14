@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Game</title>
+</head>
+<body>
+
+<textarea id="turns" disabled=""></textarea>
+
+<input type="number" id="tb_number" value="" />
+<input type="button" id="btn_send" value="Отправить!" />
+
+<script>
+    var socket = new WebSocket('ws://localhost:8080/user/gameWS')
+    var btn_send = document.getElementById('btn_send');
+    var turns = document.getElementById('turns');
+    var tb_number = document.getElementById('tb_number');
+    socket.onopen = function() {
+        alert("Соединение установлено.");
+    };
+
+    socket.onclose = function(event) {
+        if (event.wasClean) {
+            alert('Соединение закрыто чисто');
+        } else {
+            alert('Обрыв соединения'); // например, "убит" процесс сервера
+        }
+        alert('Код: ' + event.code + ' причина: ' + event.reason);
+    };
+
+    socket.onmessage = function(event) {
+        turns.value+='Бот' + event.data+'\n'
+
+    };
+
+    socket.onerror = function(error) {
+        alert("Ошибка " + error.message);
+    };
+
+
+    btn_send.onclick = function(){
+        if(socket && socket.readyState===1){
+            turns.value+= 'Вы' +tb_number.value+'\n';
+            socket.send(tb_number.value);
+            tb_number.value='';
+        }
+    }
+
+
+
+</script>
+</body>
+</html>
